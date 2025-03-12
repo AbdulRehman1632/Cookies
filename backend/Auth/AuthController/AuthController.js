@@ -36,13 +36,14 @@ const LoginController =  async (req, res) => {
     const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
     const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
 
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-    });
+      secure: true,
+      sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000
+  });
 
-    res.json({ accessToken, user: { name: user.name, email: user.email } });
+    res.status(201).json({message:"Login Successfully", accessToken, user: { name: user.name, email: user.email  } });
   } catch (error) {
     res.status(500).json({ message: "Error logging in" });
   }
@@ -50,7 +51,7 @@ const LoginController =  async (req, res) => {
 
 // ✅ Logout Route
 const LogoutController = (req, res) => {
-  res.clearCookie("refreshToken");
+  res.clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'strict' });
   res.json({ message: "Logged out successfully" });
 };
 

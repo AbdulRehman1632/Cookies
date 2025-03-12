@@ -9,13 +9,13 @@ dotenv.config();
 const app=express();
 
 app.use(express.json());
-// app.use(cors());
+
 
 app.use(cookieParser(process.env.COOKIE_SECRET)); // Secure cookies
 
 app.use(
   cors({
-    // origin: process.env.FRONTEND_URL, // React ka URL
+    origin: process.env.FRONTEND_URL, // React ka URL
     credentials: true, // Cookies allow karne ke liye
   })
 );
